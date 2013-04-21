@@ -1,0 +1,31 @@
+.smallmap {
+  width: 460px;
+  height: 512px;
+  border: 1px solid #ccc;
+  display: inline-block;
+}
+
+#interests {
+  vertical-align: top;
+  display:inline-block;
+}
+
+#interests input {
+  padding-left: 1em;
+  display:block;
+}
+
+#interests img {
+  float: left;
+  height: 1em;
+}
+
+#placeheader {
+  font-weight: bold;
+  display:block;
+}
+
+#sizeestimate {
+  font-size: 10pt;
+  color: #999;
+}

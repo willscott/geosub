@@ -3,18 +3,20 @@
 <head>
   <title>GeoSub Server</title>
   <script type='text/javascript' src='static/OpenLayers.js'></script>
-  <link rel="stylesheet" href="static/theme/default/style.css" type="text/css">
-  <style type='text/css'>
-  .smallmap {
-    width: 512px;
-    height: 256px;
-    border: 1px solid #ccc;
-  }
-  </style>
+  <link rel="stylesheet" href="static/theme/default/style.css" type="text/css" />
+  <link rel="stylesheet" href="static/styles.css" type='text/css' />
 </head>
 <body>
-  Filter:
   <div id="map" class="smallmap"></div>
+  <div id="interests">
+    <span id='placeheader'>Choose Places</span>
+    <img src='static/img/di/home.png' alt='home' />
+    <input type='text' placeholder='Home' />
+    <img src='static/img/di/city.png' alt='work' />
+    <input type='text' placeholder='Work' />
+
+    <span id='sizeestimate'>Current selection will process 0 events per day.</span>
+  </div>
   <script type="text/javascript">
   var map;
   function init(){
