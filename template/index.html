@@ -2,7 +2,40 @@
 <html>
 <head>
   <title>GeoSub Server</title>
+  <script type='text/javascript' src='static/OpenLayers.js'></script>
+  <link rel="stylesheet" href="static/theme/default/style.css" type="text/css">
+  <style type='text/css'>
+  .smallmap {
+    width: 512px;
+    height: 256px;
+    border: 1px solid #ccc;
+  }
+  </style>
 </head>
 <body>
+  Filter:
+  <div id="map" class="smallmap"></div>
+  <script type="text/javascript">
+  var map;
+  function init(){
+    map = new OpenLayers.Map('map', {
+      controls: [
+        new OpenLayers.Control.ScaleLine(),
+        new OpenLayers.Control.Navigation(),
+        new OpenLayers.Control.Zoom(),
+        new OpenLayers.Control.KeyboardDefaults()
+      ]
+    });
+
+    var layer = new OpenLayers.Layer.OSM("Simple OSM Map");
+    map.addLayer(layer);
+    
+    map.setCenter(new OpenLayers.LonLat(-122.4, 47.7).transform(
+                    new OpenLayers.Projection("EPSG:4326"),
+                    map.getProjectionObject()
+                ), 9);
+  }
+  window.addEventListener('load', init, true);
+  </script>
 </body>
 </html>
