@@ -3,6 +3,7 @@
 <head>
   <title>GeoSub Server</title>
   <script type='text/javascript' src='static/OpenLayers.js'></script>
+  <script type="text/javascript" src='static/map.js'></script>
   <link rel="stylesheet" href="static/theme/default/style.css" type="text/css" />
   <link rel="stylesheet" href="static/styles.css" type='text/css' />
 </head>
@@ -10,34 +11,10 @@
   <div id="map" class="smallmap"></div>
   <div id="interests">
     <span id='placeheader'>Choose Places</span>
-    <img src='static/img/di/home.png' alt='home' />
-    <input type='text' placeholder='Home' />
-    <img src='static/img/di/city.png' alt='work' />
-    <input type='text' placeholder='Work' />
+    <img src='static/img/di/home.png' alt='home' /><input type='text' placeholder='Home' />
+    <img src='static/img/di/city.png' alt='work' /><input type='text' placeholder='Work' />
 
     <span id='sizeestimate'>Current selection will process 0 events per day.</span>
   </div>
-  <script type="text/javascript">
-  var map;
-  function init(){
-    map = new OpenLayers.Map('map', {
-      controls: [
-        new OpenLayers.Control.ScaleLine(),
-        new OpenLayers.Control.Navigation(),
-        new OpenLayers.Control.Zoom(),
-        new OpenLayers.Control.KeyboardDefaults()
-      ]
-    });
-
-    var layer = new OpenLayers.Layer.OSM("Simple OSM Map");
-    map.addLayer(layer);
-    
-    map.setCenter(new OpenLayers.LonLat(-122.4, 47.7).transform(
-                    new OpenLayers.Projection("EPSG:4326"),
-                    map.getProjectionObject()
-                ), 9);
-  }
-  window.addEventListener('load', init, true);
-  </script>
 </body>
 </html>
