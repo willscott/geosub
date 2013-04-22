@@ -10,11 +10,31 @@
 <body>
   <div id="map" class="smallmap"></div>
   <div id="interests">
-    <span id='placeheader'>Choose Places</span>
+    <span class='placeheader'>Choose Places</span>
     <img src='static/img/di/home.png' alt='home' /><input type='text' placeholder='Home' />
     <img src='static/img/di/city.png' alt='work' /><input type='text' placeholder='Work' />
 
     <span id='sizeestimate'>Current selection will process 0 events per day.</span>
+  </div>
+  <div id="types">
+    <span class='placeheader'>Choose Feeds</span>
+    <input type='checkbox' id='feed_construction' checked />
+    <label for='feed_construction'>Construction</label>
+    <input type='checkbox' id='feed_events' checked />
+    <label for='feed_events'>Community Events</label>
+    <input type='checkbox' id='feed_crime' checked />
+    <label for='feed_crime'>Crime</label>
+    <input type='checkbox' id='feed_fire' checked />
+    <label for='feed_fire'>Fire</label>
+  </div>
+  <div id="methods">
+    <span class='placeheader'>Choose Delivery</span>
+    <ul>
+      <li><img src='static/img/di/mail.png' alt='Email' />Email Digest</li>
+      <li><img src='static/img/di/rss.png' alt='RSS' />RSS</li>
+      <li><img src='static/img/di/chat.png' alt='SMS' />SMS</li>
+      <li><img src='static/img/di/glasses.png' alt='Glassware' />Glassware</li>
+    </ul>
   </div>
 </body>
 </html>

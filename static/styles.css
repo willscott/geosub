@@ -20,7 +20,7 @@
   height: 1em;
 }
 
-#placeheader {
+.placeheader {
   font-weight: bold;
   display:block;
 }
@@ -29,3 +29,32 @@
   font-size: 10pt;
   color: #999;
 }
+
+#types {
+  vertical-align: top;
+  display:inline-block;
+}
+
+#types input {
+  float:left;
+  clear:left;
+}
+#types label {
+  float:left;
+  display:inline-block;
+}
+
+#methods {
+  vertical-align: top;
+  display:inline-block;
+}
+
+#methods ul {
+  list-style: none;
+}
+
+#methods img {
+  float: left;
+  height: 1em;
+}
+
