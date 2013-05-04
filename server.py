@@ -31,6 +31,7 @@ class Application(tornado.web.Application):
     def __init__(self):
         handlers = [
             (r"/", MainHandler),
+            (r"/config", ConfigHandler)
         ]
         settings = dict(
             cookie_secret=base64.b64encode(uuid.uuid4().bytes + uuid.uuid4().bytes),
@@ -44,6 +45,10 @@ class Application(tornado.web.Application):
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
         self.render("index.html", evaluation=False)
+
+class ConfigHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render("config.html")
 
 def main():
     tornado.options.parse_command_line()

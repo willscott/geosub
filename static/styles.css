@@ -47,10 +47,13 @@
 #methods {
   vertical-align: top;
   display:inline-block;
+  margin-left: 30px;
 }
 
 #methods ul {
   list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 #methods img {
