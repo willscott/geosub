@@ -10,13 +10,14 @@ class Store:
     self.ensureSchema()
 
   def ensureSchema(self):
-    sql = 'create table if not exists items (id INTEGER PRIMARY KEY AUTOINCREMENT, category integer, lat real, lon real, when integer, data BLOB)'
+    sql = 'create table if not exists items (id text PRIMARY KEY, category integer, lat real, lon real, ts real, data BLOB)'
     self.db.execute(sql)
     sql = 'create table if not exists categories (id INTEGER PRIMARY KEY AUTOINCREMENT, label text)'
     self.db.execute(sql)
+    self.db.commit()
 
   def getItems(self, area, since):
-    sql = 'select * from items where when > (?) and '
+    sql = 'select * from items where ts > (?) and '
     values = (since, )
     areaInfo = [descriptor.toSql() for descriptor in area]
     sql += ' and '.join([itm[0] for itm in areaInfo])
@@ -25,9 +26,18 @@ class Store:
     c = self.db.cursor()
     c.execute(sql, values)
     return c
-      
 
-  def addItem(self, category, location, time, item):
+  def has(self, id):
+    sql = 'select * from items where id=(?)'
+    val = self.db.execute(sql, (id,))
+    for l in val:
+      return True
+    return False
+
+  def addItem(self, id, category, location, time, item):
     c = self.db.cursor()
-    sql = 'insert into items values (?, ?, ?, ?, ?)'
-    c.execute(sql, (category, location.lat, location.lon, time, json.dumps(item)))
+    sql = 'insert into items values (?, ?, ?, ?, ?, ?)'
+    vals = (id, category, location[0], location[1], time, json.dumps(item))
+    print vals
+    c.execute(sql, vals)
+    self.db.commit()

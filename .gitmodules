@@ -1,3 +1,6 @@
 [submodule "tornado"]
 	path = tornado
 	url = https://github.com/facebook/tornado
+[submodule "hub/providers/geopy"]
+	path = hub/providers/geopy
+	url = git://github.com/geopy/geopy.git
