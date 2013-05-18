@@ -2,13 +2,14 @@ import feedparser
 import re
 import time
 import md5
+import string
 from geopy import geocoders
+import urllib2
 
 url = "http://web1.seattle.gov/dpd/luib/RSSAllAreas.aspx"
 
 class LandUse:
   def __init__(self):
-    print "landuse created"
     self.coder = geocoders.GoogleV3()
 
   def pull(self):
@@ -25,9 +26,20 @@ class LandUse:
   def feed2data(self, item):
     out = {'time': 0, 'lat':0, 'lon': 0, 'data': ''}
     out['time'] = time.time()
-    loc = re.sub('\(Project[^()]*\)', '', item.description)
-    place = self.coder.geocode(loc + " Seattle, WA")
+    addr = re.sub('\(Project[^()]*\)', '', item.description)
+    place = self.coder.geocode(addr + " Seattle, WA")
     out['lat'] = place[1][0]
     out['lon'] = place[1][1]
-    out['data'] = item.title
+    lines = urllib2.urlopen(item.link).readlines()
+    page = string.join(map(string.strip, lines), '')
+    desc = re.sub('</td.*','',re.sub('.*trProjectDescription"><[^>]*>','',y))
+    link = 
+    out['data'] = {
+      "addr": addr.lower().strip(),
+      "title": item.title,
+      "desc": desc,
+      "link": item.link
+    }
+    
     return out
+

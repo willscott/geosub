@@ -41,3 +41,4 @@ class Store:
     print vals
     c.execute(sql, vals)
     self.db.commit()
+    #TODO: Notify subscribers.
