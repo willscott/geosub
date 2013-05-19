@@ -11,11 +11,13 @@ if tornado_folder not in sys.path:
 
 import base64
 import logging
+import json
 import os.path
 import tornado.ioloop
 import tornado.options
 import tornado.web
 import uuid
+from hub import UserManager
 
 from tornado.options import define, options
 
@@ -26,6 +28,9 @@ define("port", default=default_port, help="port", type=int)
 
 rootLogger = logging.getLogger('')
 rootLogger.setLevel(logging.ERROR)
+
+CLIENT_ID = json.loads(
+    open('client_secrets.json', 'r').read())['web']['client_id']
 
 class Application(tornado.web.Application):
     def __init__(self):
@@ -40,11 +45,12 @@ class Application(tornado.web.Application):
             xsrf_cookies=True,
             autoescape=None,
         )
+        UserManager.install(handlers)
         tornado.web.Application.__init__(self, handlers, **settings)
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
-        self.render("index.html", evaluation=False)
+        self.render("index.html", CLIENT_ID=CLIENT_ID)
 
 class ConfigHandler(tornado.web.RequestHandler):
     def get(self):

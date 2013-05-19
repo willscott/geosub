@@ -2,8 +2,9 @@
 <html>
 <head>
   <title>GeoSub Server</title>
-  <script type='text/javascript' src='static/OpenLayers.js'></script>
+  <script type="text/javascript" src='static/OpenLayers.js'></script>
   <script type="text/javascript" src='static/map.js'></script>
+  <script type="text/javascript" src='static/controller.js'></script>
   <link rel="stylesheet" href="static/theme/default/style.css" type="text/css" />
   <link rel="stylesheet" href="static/styles.css" type='text/css' />
 </head>
@@ -13,6 +14,8 @@
     <span class='placeheader'>Choose Places</span>
     <img src='static/img/di/home.png' alt='home' /><input type='text' placeholder='Home' />
     <img src='static/img/di/city.png' alt='work' /><input type='text' placeholder='Work' />
+    <span class='placeheader'>Sensitivity</span>
+    <input type='range' min='1' max='100' value='10' />
 
     <span id='sizeestimate'>Current selection will process 0 events per day.</span>
   </div>
@@ -29,12 +32,23 @@
   </div>
   <div id="methods">
     <span class='placeheader'>Choose Delivery</span>
+    <div id="gConnect">
+      <button class="g-signin"
+          data-scope="https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/glass.timeline"
+          data-clientId="{{ CLIENT_ID }}"
+          data-accesstype="offline"
+          data-callback="onSignInCallback"
+          data-cookiepolicy="single_host_origin">
+      </button>
+    </div>
+    <!--
     <ul>
       <li><img src='static/img/di/mail.png' alt='Email' />Email Digest</li>
       <li><img src='static/img/di/rss.png' alt='RSS' />RSS</li>
       <li><img src='static/img/di/chat.png' alt='SMS' />SMS</li>
-      <li><img src='static/img/di/glasses.png' alt='Glassware' />Glassware</li>
+      <li>and more!</li>
     </ul>
+    -->
   </div>
 </body>
 </html>

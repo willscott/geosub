@@ -14,6 +14,9 @@ class Store:
     self.db.execute(sql)
     sql = 'create table if not exists categories (id INTEGER PRIMARY KEY AUTOINCREMENT, label text)'
     self.db.execute(sql)
+    sql = 'create table if not exists users (id text PRIMARY KEY, credentials text, prefs text)'
+    self.db.execute(sql)
+    sql = 'create table if not exists rules (user text not null, category integer not null, geofence text, primary key (user, category))'
     self.db.commit()
 
   def getItems(self, area, since):
@@ -27,8 +30,8 @@ class Store:
     c.execute(sql, values)
     return c
 
-  def has(self, id):
-    sql = 'select * from items where id=(?)'
+  def has(self, id, from='items'):
+    sql = 'select * from ' + from + ' where id=(?)'
     val = self.db.execute(sql, (id,))
     for l in val:
       return True
