@@ -7,6 +7,7 @@
   <script type="text/javascript" src='static/controller.js'></script>
   <link rel="stylesheet" href="static/theme/default/style.css" type="text/css" />
   <link rel="stylesheet" href="static/styles.css" type='text/css' />
+  <link rel="">
 </head>
 <body>
   <div id="overlay">
@@ -23,6 +24,7 @@
               data-scope="https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/glass.timeline"
               data-clientId="{{ CLIENT_ID }}"
               data-accesstype="offline"
+              data-redirecturi="postmessage"
               data-callback="onSignInCallback"
               data-cookiepolicy="single_host_origin">
           </button>

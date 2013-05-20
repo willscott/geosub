@@ -14,33 +14,41 @@ CLIENT_ID = json.loads(
 
 class UserManager(tornado.web.RequestHandler):
   def initialize(self):
-    self.store = store.Store("live")
+    self.store = store.Store("hub/live")
 
   @classmethod
   def install(cls, handlers):
     handlers.append((r"/user/?(.*)", UserManager))
 
-  def get(self, path):
+  def check_xsrf_cookie(self):
+    return True
+
+  def post(self, path):
     if path=='connect':
       try:
         code = self.get_argument("data")
         # Upgrade the authorization code into a credentials object
         oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
-        oauth_flow.redirect_uri = '/user/redirect'
+        oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
       except FlowExchangeError:
         self.set_status(401)
         self.content_type = 'application/json'
         self.write(
             json.dumps('Failed to upgrade the authorization code.'))
+        return
 
       gplus_id = credentials.id_token['sub']
+      print "seeing user id " + gplus_id
       if self.store.has(gplus_id, 'users'):
-        data = self.store.db.execute('select * from users where id=(?)', gplus_id);
+        print "store has user"
+        data = self.store.db.execute('select * from users where id=(?)', (gplus_id,)).fetchall();
         self.content_type = 'application/json'
-        self.write(json.dumps({'status':'existing', 'prefs':data['prefs']}))
+        self.write(json.dumps({'status':'existing', 'prefs':data[0][2]}))
       else:
-        self.store.db.execute('insert into users (id, credentials) values ((?), (?))', (gplus_id, json.dumps(credentials)))
+        print "store doesn't have user"
+        self.store.db.execute('insert into users (id, credentials) values ((?), (?))', (gplus_id, credentials.to_json()))
+        self.store.db.commit()
         self.content_type = 'application/json'
         self.write(json.dumps({'status':'new','prefs':"{}"}))
     else:

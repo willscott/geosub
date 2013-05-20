@@ -7,11 +7,11 @@ s.parentNode.insertBefore(po, s);
 function onSignInCallback(authResult) {
   if (authResult['access_token']) {
     //hide button
-    document.getElementById('gConnect').style.display='none';
-    saveSession(authResult.code)
+    document.getElementById('overlay').style.top='-100%';
+    saveSession(authResult.access_token, authResult.code)
   } else if (authResult['error']) {
     //show button
-    document.getElementById('gConnect').style.display='block';
+    document.getElementById('overlay').style.top='0';
     
     console.log('There was an error: ' + authResult['error']);
   }
@@ -21,6 +21,7 @@ function onSignInCallback(authResult) {
 function saveSession(id, code) {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', '/user/connect', true);
+  xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
   xhr.onload = function() {
     console.log(this.responseText);
   }
