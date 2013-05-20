@@ -38,10 +38,10 @@ class UserManager(tornado.web.RequestHandler):
       if self.store.has(gplus_id, 'users'):
         data = self.store.db.execute('select * from users where id=(?)', gplus_id);
         self.content_type = 'application/json'
-        self.write(json.dumps({'status':'existing', 'prefs':}))
+        self.write(json.dumps({'status':'existing', 'prefs':data['prefs']}))
       else:
         self.store.db.execute('insert into users (id, credentials) values ((?), (?))', (gplus_id, json.dumps(credentials)))
         self.content_type = 'application/json'
-        self.write(json.dumps({'status':'new','prefs':}))
+        self.write(json.dumps({'status':'new','prefs':"{}"}))
     else:
       self.write("hello")

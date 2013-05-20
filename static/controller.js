@@ -26,3 +26,24 @@ function saveSession(id, code) {
   }
   xhr.send('data=' + code);
 }
+
+function init() {
+  var sensitivity = document.getElementById('sensitivity');
+  sensitivity.addEventListener('change', function() {
+    document.getElementById('sizeestimate').innerHTML = getSizeEstimate(sensitivity.value);
+  });
+}
+
+function getSizeEstimate(val) {
+  if (val > 50) {
+    n = Math.round((1 + (val - 50)/10))
+    return "Targeting ~" + n + " events per hour."
+  } else if (val > 9) {
+    n = Math.round((1 + (val-10)/2))
+    return "Targeting ~" + n + " events per day."
+  } else {
+    return "Targeting ~" + val + " events per week."
+  }
+}
+
+window.addEventListener('load', init);

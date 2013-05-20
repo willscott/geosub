@@ -30,8 +30,8 @@ class Store:
     c.execute(sql, values)
     return c
 
-  def has(self, id, from='items'):
-    sql = 'select * from ' + from + ' where id=(?)'
+  def has(self, id, fr="items"):
+    sql = 'select * from ' + fr + ' where id=(?)'
     val = self.db.execute(sql, (id,))
     for l in val:
       return True
