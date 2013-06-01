@@ -1,3 +1,7 @@
+body {
+  margin: 0px;
+}
+
 #overlay {
   position: fixed;
   width: 100%;
@@ -45,9 +49,29 @@
 
 .smallmap {
   width: 460px;
-  height: 512px;
-  border: 1px solid #ccc;
+  height: 100%;
   display: inline-block;
+  left: 300px;
+  position: fixed;
+  width: 100%;
+}
+
+#controls {
+  width: 300px;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1200;
+  background: #fefefd;
+  padding: 25px;
+  box-sizing: border-box;
+  border-right: 1px solid #ccc;
+  overflow: auto;
+}
+
+.control {
+  margin-bottom: 20px;
 }
 
 #interests {
@@ -56,13 +80,20 @@
 }
 
 #interests input {
-  padding-left: 1em;
+  padding-left: .3em;
   display:block;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+#interests input#sensitivity {
+  margin-bottom: 0px;
 }
 
 #interests img {
   float: left;
-  height: 1em;
+  height: 2em;
+  margin-right: .3em;
 }
 
 .placeheader {
@@ -92,7 +123,6 @@
 #methods {
   vertical-align: top;
   display:inline-block;
-  margin-left: 30px;
 }
 
 #methods ul {
