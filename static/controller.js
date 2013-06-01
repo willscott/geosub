@@ -9,7 +9,9 @@ head.parentNode.insertBefore(plusone, head);
 // Authentication / preference state.
 var state = {
   uid: null,
-  prefs: {}
+  prefs: {
+    feeds: {}
+  }
 };
 
 function onSignInCallback(authResult) {
@@ -38,6 +40,24 @@ function saveSession(id, code) {
   xhr.send('data=' + code);
 }
 
+function refreshPrefs() {
+  
+}
+
+function savePrefs() {
+  if (!state.uid) {
+    return onSignInCallback({'error': 'Not Signed In'});
+  }
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', '/usr/sync', true);
+  xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+  xhr.onload = function() {
+    state.prefs = JSON.parse(this.responseText);
+    refreshPrefs();
+  }
+  xhr.send('token=' + state.uid + '&data=' + JSON.stringify(state.prefs));
+}
+
 /**
  * Respond to sensitivity measurements.
  */
@@ -61,6 +81,15 @@ function init() {
   sensitivity.addEventListener('change', function() {
     document.getElementById('sizeestimate').innerHTML = getSizeEstimate(sensitivity.value);
   });
+  var inputs = document.getElementsByTagName('input');
+  for (var i = 0; i < inputs.length; i++) {
+    if (inputs[i].id.indexOf('feed_') == 0) {
+      inputs[i].addEventListener('change', function(el) {
+        prefs.feeds[el.id.substr(5)] = el.checked;
+        savePrefs();
+      }.bind(inputs[i]), true);
+    }
+  }
 }
 
 window.addEventListener('load', init);
