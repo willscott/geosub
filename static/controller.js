@@ -8,9 +8,12 @@ head.parentNode.insertBefore(plusone, head);
 
 // Authentication / preference state.
 var state = {
+  at: null,
+  session: null,
   uid: null,
   prefs: {
-    feeds: {}
+    feeds: {},
+    places: {}
   }
 };
 
@@ -28,20 +31,56 @@ function onSignInCallback(authResult) {
   console.log(authResult);
 }
 
-function saveSession(id, code) {
-  state.uid = id;
+function saveSession(at, code) {
+  state.at = at;
   var xhr = new XMLHttpRequest();
   xhr.open('POST', '/user/connect', true);
   xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
   xhr.onload = function() {
-    state.prefs = JSON.parse(this.responseText);
+    var prefs = JSON.parse(this.responseText);
+    if(prefs.status == 'new' || prefs.status == 'existing') {
+      if (!state.uid && prefs.uid) {
+        state.uid = prefs.uid;
+      }
+      state.session = prefs.session;
+      if (prefs.prefs) {
+        try {
+          state.prefs = JSON.parse(prefs.prefs) || state.prefs;
+        } catch(e) {}
+      }
+    }
     refreshPrefs();
   }
   xhr.send('data=' + code);
 }
 
 function refreshPrefs() {
-  
+  for (var feed in state.prefs.feeds) {
+    var el = document.getElementById('feed_' + feed);
+    if (el) {
+      el.checked = state.prefs.feeds[feed];
+    }
+  }
+  if (state.prefs.places == undefined) {
+    state.prefs.places = {};
+  }
+  for (var place in state.prefs.places) {
+    var el = document.getElementById('place_' + place);
+    if (el) {
+      el.value = state.prefs.places[place];
+    }
+  }
+  if (state.prefs['email_id']) {
+    document.getElementById('email_id').value = state.prefs['email_id'];
+  } else if(!document.getElementById('email_id').value) {
+    gapi.client.load('oauth2', 'v2', function() {
+      var request = gapi.client.oauth2.userinfo.get();
+      request.execute(function(obj) {
+        document.getElementById('email_id').value = obj['email'];
+        savePrefs();
+      });
+    });
+  }
 }
 
 function savePrefs() {
@@ -49,13 +88,19 @@ function savePrefs() {
     return onSignInCallback({'error': 'Not Signed In'});
   }
   var xhr = new XMLHttpRequest();
-  xhr.open('POST', '/usr/sync', true);
+  xhr.open('POST', '/user/sync', true);
   xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
   xhr.onload = function() {
-    state.prefs = JSON.parse(this.responseText);
+    var prefs = JSON.parse(this.responseText);
+    if(prefs.status == 'good') {
+      state.prefs = JSON.parse(prefs.prefs) || state.prefs;
+    } else {
+      console.warn("error / unexpected response: " + this.responseText);
+      onSignInCallback({'error': 'Not Signed In'});
+    }
     refreshPrefs();
   }
-  xhr.send('token=' + state.uid + '&data=' + JSON.stringify(state.prefs));
+  xhr.send('token=' + state.session + '&id=' + state.uid + '&data=' + JSON.stringify(state.prefs));
 }
 
 /**
@@ -85,9 +130,24 @@ function init() {
   for (var i = 0; i < inputs.length; i++) {
     if (inputs[i].id.indexOf('feed_') == 0) {
       inputs[i].addEventListener('change', function(el) {
-        prefs.feeds[el.id.substr(5)] = el.checked;
+        state.prefs.feeds[el.id.substr(5)] = el.checked;
         savePrefs();
-      }.bind(inputs[i]), true);
+      }.bind({}, inputs[i]), true);
+    }
+    else if (inputs[i].id.indexOf('place_') == 0) {
+      inputs[i].addEventListener('change', function(el) {
+        if (state.prefs.places == undefined) {
+          state.prefs.places = {};
+        }
+        state.prefs.places[el.id.substr(6)] = el.value;
+        savePrefs();
+      }.bind({}, inputs[i]), true);
+    }
+    else if (inputs[i].id == 'email_id') {
+      inputs[i].addEventListener('change', function(el) {
+        state.prefs['email_id'] = el.value;
+        savePrefs();
+      }.bind({}, inputs[i]), true);
     }
   }
 }
