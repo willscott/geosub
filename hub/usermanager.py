@@ -10,6 +10,7 @@ import json
 import random
 import store
 import string
+import sys
 
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
@@ -75,7 +76,10 @@ class UserManager(tornado.web.RequestHandler):
         print "in db is session " + user_query[0][2]
         self.write(json.dumps({'status':'user lookup / auth error'}))
       except Exception as e:
+        print e
         self.write(json.dumps({'status':'real error:' + str(e)}))
+        print sys.exc_info()[0]
+        raise
     else:
       self.write("hello")
 
@@ -85,11 +89,12 @@ class UserManager(tornado.web.RequestHandler):
       base = json.loads(db_prefs)
     
     #Update the portion of user prefs that the user can change.
-    if prefs['email_id']: base['email_id'] = prefs['email_id']
-    if prefs['feeds']: base['feeds'] = prefs['feeds']
-    
+    if 'email_id' in prefs:
+      base['email_id'] = prefs.email_id
+    if u'feeds' in prefs:
+      base['feeds'] = prefs[u'feeds']
+
     #TODO: syncronize prefs with db rules table.
-    
 
     prefstr = json.dumps(base)
     self.store.db.execute('update users set prefs=(?) where id=(?)', (prefstr, id));
