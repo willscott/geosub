@@ -80,11 +80,18 @@ class UserManager(tornado.web.RequestHandler):
       self.write("hello")
 
   def sync(self, id, db_prefs, prefs):
-    #TODO: syncronize prefs with db rules table.
     base = {}
+    if len(db_prefs):
+      base = json.loads(db_prefs)
+    
+    #Update the portion of user prefs that the user can change.
+    if prefs['email_id']: base['email_id'] = prefs['email_id']
+    if prefs['feeds']: base['feeds'] = prefs['feeds']
+    
+    #TODO: syncronize prefs with db rules table.
     
 
-    prefstr = json.dumps(prefs)
+    prefstr = json.dumps(base)
     self.store.db.execute('update users set prefs=(?) where id=(?)', (prefstr, id));
     self.store.db.commit()
     self.write(json.dumps({'status':'good', 'prefs': prefstr}))
