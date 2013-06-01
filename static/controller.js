@@ -1,13 +1,21 @@
-var po = document.createElement('script');
-po.type = 'text/javascript'; po.async = true;
-po.src = 'https://plus.google.com/js/client:plusone.js';
-var s = document.getElementsByTagName('script')[0];
-s.parentNode.insertBefore(po, s);
+// Include google auth client API.
+var plusone = document.createElement('script');
+plusone.type = 'text/javascript';
+plusone.async = true;
+plusone.src = 'https://plus.google.com/js/client:plusone.js';
+var head = document.getElementsByTagName('script')[0];
+head.parentNode.insertBefore(plusone, head);
+
+// Authentication / preference state.
+var state = {
+  uid: null,
+  prefs: {}
+};
 
 function onSignInCallback(authResult) {
   if (authResult['access_token']) {
     //hide button
-    document.getElementById('overlay').style.top='-100%';
+    document.getElementById('overlay').style.top = '-100%';
     saveSession(authResult.access_token, authResult.code)
   } else if (authResult['error']) {
     //show button
@@ -19,11 +27,13 @@ function onSignInCallback(authResult) {
 }
 
 function saveSession(id, code) {
+  state.uid = id;
   var xhr = new XMLHttpRequest();
   xhr.open('POST', '/user/connect', true);
   xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
   xhr.onload = function() {
-    console.log(this.responseText);
+    state.prefs = JSON.parse(this.responseText);
+    refreshPrefs();
   }
   xhr.send('data=' + code);
 }
