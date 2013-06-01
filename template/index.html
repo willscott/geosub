@@ -5,6 +5,8 @@
   <script type="text/javascript" src='static/OpenLayers.js'></script>
   <script type="text/javascript" src='static/map.js'></script>
   <script type="text/javascript" src='static/controller.js'></script>
+
+  <link href='http://fonts.googleapis.com/css?family=Roboto:100,300,500,500italic,900,900italic' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="static/theme/default/style.css" type="text/css" />
   <link rel="stylesheet" href="static/styles.css" type='text/css' />
   <link rel="">
@@ -33,37 +35,39 @@
     </div>
   </div>
   <div id="map" class="smallmap"></div>
-  <div id="interests">
-    <span class='placeheader'>Choose Places</span>
-    <img src='static/img/di/home.png' alt='home' /><input type='text' placeholder='Home' />
-    <img src='static/img/di/city.png' alt='work' /><input type='text' placeholder='Work' />
-    <span class='placeheader'>Sensitivity</span>
-    <input id='sensitivity' type='range' min='1' max='100' value='10' />
+  <div id="controls">
+    <div id="interests" class="control">
+      <span class='placeheader'>Choose Places</span>
+      <img src='static/img/di/home.png' alt='home' /><input type='text' placeholder='Home' />
+      <img src='static/img/di/city.png' alt='work' /><input type='text' placeholder='Work' />
+      <span class='placeheader'>Sensitivity</span>
+      <input id='sensitivity' type='range' min='1' max='100' value='10' />
 
-    <span id='sizeestimate'>Targetting 1 event per day.</span>
-  </div>
-  <div id="types">
-    <span class='placeheader'>Choose Feeds</span>
-    <input type='checkbox' id='feed_construction' checked />
-    <label for='feed_construction'>Construction</label>
-    <input type='checkbox' id='feed_events' checked />
-    <label for='feed_events'>Community Events</label>
-    <input type='checkbox' id='feed_crime' checked />
-    <label for='feed_crime'>Crime</label>
-    <input type='checkbox' id='feed_fire' checked />
-    <label for='feed_fire'>Fire</label>
-  </div>
-  <div id="methods">
-    <span class='placeheader'>Choose Delivery</span>
-    <input id='email_id' placeholder='email@domain.com'/>
-    <!--
-    <ul>
-      <li><img src='static/img/di/mail.png' alt='Email' />Email Digest</li>
-      <li><img src='static/img/di/rss.png' alt='RSS' />RSS</li>
-      <li><img src='static/img/di/chat.png' alt='SMS' />SMS</li>
-      <li>and more!</li>
-    </ul>
-    -->
+      <span id='sizeestimate'>Targetting 1 event per day.</span>
+    </div>
+    <div id="types" class="control">
+      <span class='placeheader'>Choose Feeds</span>
+      <input type='checkbox' id='feed_construction' checked />
+      <label for='feed_construction'>Construction</label>
+      <input type='checkbox' id='feed_events' checked />
+      <label for='feed_events'>Community Events</label>
+      <input type='checkbox' id='feed_crime' checked />
+      <label for='feed_crime'>Crime</label>
+      <input type='checkbox' id='feed_fire' checked />
+      <label for='feed_fire'>Fire</label>
+    </div>
+    <div id="methods" class="control">
+      <span class='placeheader'>Choose Delivery</span>
+      <input id='email_id' placeholder='email@domain.com'/>
+      <!--
+      <ul>
+        <li><img src='static/img/di/mail.png' alt='Email' />Email Digest</li>
+        <li><img src='static/img/di/rss.png' alt='RSS' />RSS</li>
+        <li><img src='static/img/di/chat.png' alt='SMS' />SMS</li>
+        <li>and more!</li>
+      </ul>
+      -->
+    </div>
   </div>
 </body>
 </html>
