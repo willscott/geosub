@@ -17,6 +17,7 @@ class Store:
     sql = 'create table if not exists users (id text PRIMARY KEY, credentials text, session text, prefs text)'
     self.db.execute(sql)
     sql = 'create table if not exists rules (user text not null, category integer not null, geofence text, primary key (user, category))'
+    self.db.execute(sql)
     self.db.commit()
 
   def getItems(self, area, since):

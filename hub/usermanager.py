@@ -93,6 +93,8 @@ class UserManager(tornado.web.RequestHandler):
       base['email_id'] = prefs.email_id
     if u'feeds' in prefs:
       base['feeds'] = prefs[u'feeds']
+    if u'places' in prefs:
+      base['places'] = prefs[u'places']
 
     #TODO: syncronize prefs with db rules table.
 
