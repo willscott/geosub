@@ -7,7 +7,9 @@ from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 
 import json
+import random
 import store
+import string
 
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
@@ -22,6 +24,10 @@ class UserManager(tornado.web.RequestHandler):
 
   def check_xsrf_cookie(self):
     return True
+  
+  def mksession(self):
+    return ''.join(random.choice(string.ascii_uppercase + string.digits)
+                      for x in xrange(32))
 
   def post(self, path):
     if path == 'connect':
@@ -41,31 +47,30 @@ class UserManager(tornado.web.RequestHandler):
       gplus_id = credentials.id_token['sub']
       print "seeing user id " + gplus_id
       if self.store.has(gplus_id, 'users'):
-        print "store has user"
         data = self.store.db.execute('select * from users where id=(?)', (gplus_id,)).fetchall();
+        session = self.mksession()
+        self.store.db.execute('update users set session=(?) where id=(?)', (session, gplus_id)).fetchall();
         self.content_type = 'application/json'
-        self.write(json.dumps({'status':'existing', 'uid':gplus_id, 'prefs':data[0][2]}))
+        self.write(json.dumps({'status':'existing', 'uid':gplus_id,'session':session, 'prefs':data[0][2]}))
       else:
         print "store doesn't have user"
-        self.store.db.execute('insert into users (id, credentials) values ((?), (?))', (gplus_id, credentials.to_json()))
+        session = self.mksession()
+        self.store.db.execute('insert into users (id, session, credentials) values ((?), (?), (?))', (gplus_id, session, credentials.to_json()))
         self.store.db.commit()
         self.content_type = 'application/json'
         # TODO: cleanup default prefs.
-        self.write(json.dumps({'status':'new','uid': gplus_id,'prefs':"{\"feeds\":{\"feed_construction\":true}}"}))
+        self.write(json.dumps({'status':'new','uid': gplus_id,'session': session,'prefs':"{\"feeds\":{\"feed_construction\":true}}"}))
     elif path == 'sync':
       try:
         token = self.get_argument("token")
         id = self.get_argument("id")
         prefs = self.get_argument("data")
-        user_query = self.store.db.execute('select * from users where id=(?)', id).fetchall()
+        user_query = self.store.db.execute('select * from users where id=(?) and session=(?)', (id, token)).fetchall()
         if len(user_query):
-          creds = json.loads(user_query[0][1])
-          print creds
-          if creds['access_token'] == token:
-            return self.sync(id, json.loads(prefs))
-        self.write(json.dumps({'status':'error'}))
-      except:
-        self.write(json.dumps({'status':'error'}))
+          return self.sync(id, json.loads(prefs))
+        self.write(json.dumps({'status':'user lookup / auth error'}))
+      except Exception as e:
+        self.write(json.dumps({'status':'real error:' + str(e)}))
     else:
       self.write("hello")
 

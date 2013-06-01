@@ -14,7 +14,7 @@ class Store:
     self.db.execute(sql)
     sql = 'create table if not exists categories (id INTEGER PRIMARY KEY AUTOINCREMENT, label text)'
     self.db.execute(sql)
-    sql = 'create table if not exists users (id text PRIMARY KEY, credentials text, prefs text)'
+    sql = 'create table if not exists users (id text PRIMARY KEY, credentials text, session text, prefs text)'
     self.db.execute(sql)
     sql = 'create table if not exists rules (user text not null, category integer not null, geofence text, primary key (user, category))'
     self.db.commit()
