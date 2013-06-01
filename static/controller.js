@@ -18,11 +18,9 @@ function onSignInCallback(authResult) {
   if (authResult['access_token']) {
     //hide button
     document.getElementById('overlay').style.top = '-100%';
-    document.getElementById('overlay').style.display = 'none';
     saveSession(authResult.access_token, authResult.code)
   } else if (authResult['error']) {
     //show button
-    document.getElementById('overlay').style.display='block';
     document.getElementById('overlay').style.top='0';
     
     console.log('There was an error: ' + authResult['error']);
