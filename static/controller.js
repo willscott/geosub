@@ -38,13 +38,9 @@ function saveSession(id, code) {
   xhr.send('data=' + code);
 }
 
-function init() {
-  var sensitivity = document.getElementById('sensitivity');
-  sensitivity.addEventListener('change', function() {
-    document.getElementById('sizeestimate').innerHTML = getSizeEstimate(sensitivity.value);
-  });
-}
-
+/**
+ * Respond to sensitivity measurements.
+ */
 function getSizeEstimate(val) {
   if (val > 50) {
     n = Math.round((1 + (val - 50)/10))
@@ -55,6 +51,16 @@ function getSizeEstimate(val) {
   } else {
     return "Targeting ~" + val + " events per week."
   }
+}
+
+/**
+ * Hook up event listeners.
+ */
+function init() {
+  var sensitivity = document.getElementById('sensitivity');
+  sensitivity.addEventListener('change', function() {
+    document.getElementById('sizeestimate').innerHTML = getSizeEstimate(sensitivity.value);
+  });
 }
 
 window.addEventListener('load', init);
