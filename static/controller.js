@@ -60,6 +60,17 @@ function refreshPrefs() {
       el.checked = state.prefs.feeds[feed];
     }
   }
+  if (state.prefs['email_id']) {
+    document.getElementById('email_id').value = state.prefs['email_id'];
+  } else if(!document.getElementById('email_id').value) {
+    gapi.client.load('oauth2', 'v2', function() {
+      var request = gapi.client.oauth2.userinfo.get();
+      request.execute(function(obj) {
+        document.getElementById('email_id').value = obj['email'];
+        savePrefs();
+      });
+    });
+  }
 }
 
 function savePrefs() {
@@ -111,6 +122,12 @@ function init() {
       inputs[i].addEventListener('change', function(el) {
         console.log(state.prefs);
         state.prefs.feeds[el.id.substr(5)] = el.checked;
+        savePrefs();
+      }.bind({}, inputs[i]), true);
+    }
+    else if (inputs[i].id == 'email_id') {
+      inputs[i].addEventListener('change', function(el) {
+        state.prefs['email_id'] = el.value;
         savePrefs();
       }.bind({}, inputs[i]), true);
     }

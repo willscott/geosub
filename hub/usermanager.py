@@ -69,7 +69,7 @@ class UserManager(tornado.web.RequestHandler):
         prefs = self.get_argument("data")
         user_query = self.store.db.execute('select * from users where id=(?) and session=(?)', (id, token)).fetchall()
         if len(user_query):
-          return self.sync(id, json.loads(prefs))
+          return self.sync(id, user_query[0][3], json.loads(prefs))
         print "USR lookup " + id + " for session " + token
         user_query = self.store.db.execute('select * from users where id=(?)', (id, )).fetchall()
         print "in db is session " + user_query[0][2]
@@ -79,8 +79,10 @@ class UserManager(tornado.web.RequestHandler):
     else:
       self.write("hello")
 
-  def sync(self, id, prefs):
+  def sync(self, id, db_prefs, prefs):
     #TODO: syncronize prefs with db rules table.
+    base = {}
+    
 
     prefstr = json.dumps(prefs)
     self.store.db.execute('update users set prefs=(?) where id=(?)', (prefstr, id));
