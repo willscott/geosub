@@ -8,6 +8,7 @@ head.parentNode.insertBefore(plusone, head);
 
 // Authentication / preference state.
 var state = {
+  at: null,
   uid: null,
   prefs: {
     feeds: {}
@@ -15,10 +16,11 @@ var state = {
 };
 
 function onSignInCallback(authResult) {
+  console.log(authResult);
   if (authResult['access_token']) {
     //hide button
     document.getElementById('overlay').style.top = '-100%';
-    saveSession(authResult.access_token, authResult.code)
+    saveSession(authResult.uid, authResult.access_token, authResult.code)
   } else if (authResult['error']) {
     //show button
     document.getElementById('overlay').style.top='0';
@@ -28,14 +30,18 @@ function onSignInCallback(authResult) {
   console.log(authResult);
 }
 
-function saveSession(id, code) {
-  state.uid = id;
+function saveSession(uid, at, code) {
+  state.uid = uid;
+  state.at = at;
   var xhr = new XMLHttpRequest();
   xhr.open('POST', '/user/connect', true);
   xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
   xhr.onload = function() {
     var prefs = JSON.parse(this.responseText);
     if(prefs.status == 'new' || prefs.status == 'existing') {
+      if (!state.uid && prefs.uid) {
+        state.uid = prefs.uid;
+      }
       state.prefs = prefs.prefs || state.prefs;
     }
     refreshPrefs();
@@ -63,10 +69,12 @@ function savePrefs() {
     var prefs = JSON.parse(this.responseText);
     if(prefs.status == 'new' || prefs.status == 'existing') {
       state.prefs = prefs.prefs || state.prefs;
+    } else {
+      console.warn("error / unexpected response: " + this.responseText);
     }
     refreshPrefs();
   }
-  xhr.send('token=' + state.uid + '&data=' + JSON.stringify(state.prefs));
+  xhr.send('token=' + state.at + '&id=' + state.uid + '&data=' + JSON.stringify(state.prefs));
 }
 
 /**
