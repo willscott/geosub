@@ -12,7 +12,8 @@ var state = {
   session: null,
   uid: null,
   prefs: {
-    feeds: {}
+    feeds: {},
+    places: {}
   }
 };
 
@@ -58,6 +59,15 @@ function refreshPrefs() {
     var el = document.getElementById('feed_' + feed);
     if (el) {
       el.checked = state.prefs.feeds[feed];
+    }
+  }
+  if (state.prefs.places == undefined) {
+    state.prefs.places = {};
+  }
+  for (var place in state.prefs.places) {
+    var el = document.getElementById('place_' + place);
+    if (el) {
+      el.value = state.prefs.places[place];
     }
   }
   if (state.prefs['email_id']) {
@@ -120,8 +130,16 @@ function init() {
   for (var i = 0; i < inputs.length; i++) {
     if (inputs[i].id.indexOf('feed_') == 0) {
       inputs[i].addEventListener('change', function(el) {
-        console.log(state.prefs);
         state.prefs.feeds[el.id.substr(5)] = el.checked;
+        savePrefs();
+      }.bind({}, inputs[i]), true);
+    }
+    else if (inputs[i].id.indexOf('place_') == 0) {
+      inputs[i].addEventListener('change', function(el) {
+        if (state.prefs.places == undefined) {
+          state.prefs.places = {};
+        }
+        state.prefs.places[el.id.substr(6)] = el.value;
         savePrefs();
       }.bind({}, inputs[i]), true);
     }

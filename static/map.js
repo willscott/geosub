@@ -34,6 +34,9 @@ function initPlaceChooser() {
 
 function placeChange(e) {
   var place = e.target;
+  if (!place.value) {
+    return;
+  }
   lookupPlace(place.value, function(place, val) {
     if (val) {
       place.previousSibling.style.borderBottom = '0px';
