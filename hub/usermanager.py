@@ -49,9 +49,11 @@ class UserManager(tornado.web.RequestHandler):
       if self.store.has(gplus_id, 'users'):
         data = self.store.db.execute('select * from users where id=(?)', (gplus_id,)).fetchall();
         session = self.mksession()
-        self.store.db.execute('update users set session=(?) where id=(?)', (session, gplus_id)).fetchall();
+        print "Current session for user should now be  " + session
+        self.store.db.execute('update users set session=(?) where id=(?)', (session, gplus_id))
+        self.store.db.commit()        
         self.content_type = 'application/json'
-        self.write(json.dumps({'status':'existing', 'uid':gplus_id,'session':session, 'prefs':data[0][2]}))
+        self.write(json.dumps({'status':'existing', 'uid':gplus_id,'session':session, 'prefs':data[0][3]}))
       else:
         print "store doesn't have user"
         session = self.mksession()
@@ -68,6 +70,9 @@ class UserManager(tornado.web.RequestHandler):
         user_query = self.store.db.execute('select * from users where id=(?) and session=(?)', (id, token)).fetchall()
         if len(user_query):
           return self.sync(id, json.loads(prefs))
+        print "USR lookup " + id + " for session " + token
+        user_query = self.store.db.execute('select * from users where id=(?)', (id, )).fetchall()
+        print "in db is session " + user_query[0][2]
         self.write(json.dumps({'status':'user lookup / auth error'}))
       except Exception as e:
         self.write(json.dumps({'status':'real error:' + str(e)}))
@@ -75,4 +80,10 @@ class UserManager(tornado.web.RequestHandler):
       self.write("hello")
 
   def sync(self, id, prefs):
+    #TODO: syncronize prefs with db rules table.
+
+    prefstr = json.dumps(prefs)
+    self.store.db.execute('update users set prefs=(?) where id=(?)', (prefstr, id));
+    self.store.db.commit()
+    self.write(json.dumps({'status':'good', 'prefs': prefstr}))
     print "Syncing " + id

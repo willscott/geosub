@@ -42,7 +42,11 @@ function saveSession(at, code) {
         state.uid = prefs.uid;
       }
       state.session = prefs.session;
-      state.prefs = JSON.parse(prefs.prefs) || state.prefs;
+      if (prefs.prefs) {
+        try {
+          state.prefs = JSON.parse(prefs.prefs) || state.prefs;
+        } catch(e) {}
+      }
     }
     refreshPrefs();
   }
@@ -67,10 +71,11 @@ function savePrefs() {
   xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
   xhr.onload = function() {
     var prefs = JSON.parse(this.responseText);
-    if(prefs.status == 'new' || prefs.status == 'existing') {
+    if(prefs.status == 'good') {
       state.prefs = JSON.parse(prefs.prefs) || state.prefs;
     } else {
       console.warn("error / unexpected response: " + this.responseText);
+      onSignInCallback({'error': 'Not Signed In'});
     }
     refreshPrefs();
   }
