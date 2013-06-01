@@ -8,8 +8,8 @@
   margin: 0;
   z-index: 2000;
   background: rgba(255, 255, 255, 0.8);
-  transition: top 0.5s;
-  -webkit-transition: top 0.5s;
+  transition: all 0.5s;
+  -webkit-transition: all 0.5s;
 }
 
 #signin {
