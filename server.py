@@ -18,6 +18,7 @@ import tornado.options
 import tornado.web
 import uuid
 from hub import UserManager
+from hub import DataManager
 
 from tornado.options import define, options
 
@@ -46,6 +47,7 @@ class Application(tornado.web.Application):
             autoescape=None,
         )
         UserManager.install(handlers)
+        DataManager.install(handlers)
         tornado.web.Application.__init__(self, handlers, **settings)
 
 class MainHandler(tornado.web.RequestHandler):

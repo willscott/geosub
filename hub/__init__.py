@@ -5,3 +5,4 @@ import geoarea
 import daemon
 import store
 from usermanager import UserManager
+from datamanager import DataManager
