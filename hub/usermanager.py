@@ -50,6 +50,7 @@ class UserManager(tornado.web.RequestHandler):
         self.store.db.execute('insert into users (id, credentials) values ((?), (?))', (gplus_id, credentials.to_json()))
         self.store.db.commit()
         self.content_type = 'application/json'
-        self.write(json.dumps({'status':'new','prefs':"{}"}))
+        # TODO: cleanup default prefs.
+        self.write(json.dumps({'status':'new','prefs':"{\"feeds\":{\"feed_construction\":true}}"}))
     else:
       self.write("hello")

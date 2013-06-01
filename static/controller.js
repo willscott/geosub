@@ -34,14 +34,22 @@ function saveSession(id, code) {
   xhr.open('POST', '/user/connect', true);
   xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
   xhr.onload = function() {
-    state.prefs = JSON.parse(this.responseText);
+    var prefs = JSON.parse(this.responseText);
+    if(prefs.status == 'new' || prefs.status == 'existing') {
+      state.prefs = prefs.prefs || state.prefs;
+    }
     refreshPrefs();
   }
   xhr.send('data=' + code);
 }
 
 function refreshPrefs() {
-  
+  for (var feed in state.prefs.feeds) {
+    var el = document.getElementById('feed_' + feed);
+    if (el) {
+      el.checked = state.prefs.feeds[feed];
+    }
+  }
 }
 
 function savePrefs() {
@@ -49,10 +57,13 @@ function savePrefs() {
     return onSignInCallback({'error': 'Not Signed In'});
   }
   var xhr = new XMLHttpRequest();
-  xhr.open('POST', '/usr/sync', true);
+  xhr.open('POST', '/user/sync', true);
   xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
   xhr.onload = function() {
-    state.prefs = JSON.parse(this.responseText);
+    var prefs = JSON.parse(this.responseText);
+    if(prefs.status == 'new' || prefs.status == 'existing') {
+      state.prefs = prefs.prefs || state.prefs;
+    }
     refreshPrefs();
   }
   xhr.send('token=' + state.uid + '&data=' + JSON.stringify(state.prefs));
@@ -85,9 +96,10 @@ function init() {
   for (var i = 0; i < inputs.length; i++) {
     if (inputs[i].id.indexOf('feed_') == 0) {
       inputs[i].addEventListener('change', function(el) {
-        prefs.feeds[el.id.substr(5)] = el.checked;
+        console.log(state.prefs);
+        state.prefs.feeds[el.id.substr(5)] = el.checked;
         savePrefs();
-      }.bind(inputs[i]), true);
+      }.bind({}, inputs[i]), true);
     }
   }
 }
