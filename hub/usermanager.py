@@ -62,14 +62,20 @@ class UserManager(tornado.web.RequestHandler):
         self.store.db.commit()
         self.content_type = 'application/json'
         # TODO: cleanup default prefs.
-        self.write(json.dumps({'status':'new','uid': gplus_id,'session': session,'prefs':"{\"feeds\":{\"feed_construction\":true}}"}))
+        prefs = {
+          "feeds": {
+            "feed_construction": True
+          }, "places": {
+          }
+        }
+        self.write(json.dumps({'status':'new','uid': gplus_id,'session': session,'prefs': json.dumps(prefs)}))
     elif path == 'sync':
       try:
         token = self.get_argument("token")
         id = self.get_argument("id")
         prefs = self.get_argument("data")
         user_query = self.store.db.execute('select * from users where id=(?) and session=(?)', (id, token)).fetchall()
-        if len(user_query):
+        if user_query != None:
           return self.sync(id, user_query[0][3], json.loads(prefs))
         print "USR lookup " + id + " for session " + token
         user_query = self.store.db.execute('select * from users where id=(?)', (id, )).fetchall()
@@ -85,7 +91,7 @@ class UserManager(tornado.web.RequestHandler):
 
   def sync(self, id, db_prefs, prefs):
     base = {}
-    if len(db_prefs):
+    if db_prefs != None and len(db_prefs):
       base = json.loads(db_prefs)
     
     #Update the portion of user prefs that the user can change.
