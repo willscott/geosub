@@ -24,9 +24,22 @@ body {
 }
 
 #brand {
+  background: #4a3d4f; /* Old browsers */
+  background: -moz-radial-gradient(center, ellipse cover, #4a3d4f 0%, #39313f 100%); /* FF3.6+ */
+  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#4a3d4f), color-stop(100%,#39313f)); /* Chrome,Safari4+ */
+  background: -webkit-radial-gradient(center, ellipse cover, #4a3d4f 0%,#39313f 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-radial-gradient(center, ellipse cover, #4a3d4f 0%,#39313f 100%); /* Opera 12+ */
+  background: -ms-radial-gradient(center, ellipse cover, #4a3d4f 0%,#39313f 100%); /* IE10+ */
+  background: radial-gradient(ellipse at center, #4a3d4f 0%,#39313f 100%); /* W3C */
+  width:300px;
+  height: 160px;
+  border: 2px solid black;
+  border-right: 0;
   float:left;
-  width:400px;
-  height:300px;
+  box-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+  text-align: center;
+  margin-left: 100px;
+  color: white;
 }
 
 .promo {
@@ -36,6 +49,7 @@ body {
 
 .promo img {
   border: 2px black solid;
+  border-left: 0;
   box-shadow: 3px 3px 6px rgba(0,0,0,0.5);
   padding: 0;
   margin: 0;
