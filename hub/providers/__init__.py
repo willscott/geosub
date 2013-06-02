@@ -5,5 +5,7 @@ if geopy_folder not in sys.path:
   sys.path.insert(0, geopy_folder)
 
 import landuse
+import fire
 
 providers = [(landuse.url, landuse.LandUse)]
+providers = [(fire.url, fire.Fire)]
