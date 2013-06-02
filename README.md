@@ -12,20 +12,21 @@ Installation
 Running
 ------
 
-* Backend
+### Backend
 
     cd hub
     python daemon.py
 
-* Frontend
-  * Currently needs a google project id saved as client_secrets.json.
-  * Make a project at https://code.google.com/apis/console
-  * In API Access create a client id for Web apps
-  * Set javascript origin to 'http://localhost:8080'
-  * In Services, enable 'Google+ API'
-  * Save a file 'client_secrets.json' that looks like:
+### Frontend
 
+* Currently needs a google project id saved as client_secrets.json.
+* Make a project at https://code.google.com/apis/console
+* In API Access create a client id for Web apps
+* Set javascript origin to 'http://localhost:8080'
+* In Services, enable 'Google+ API'
+* Save a file 'client_secrets.json' that looks like:
 
+```javascript
     { "web":
       { "client_id": "<yourid>.apps.googleusercontent.com",
         "client_secret": "<yoursecret>",
@@ -34,11 +35,16 @@ Running
         "token_uri": "https://accounts.google.com/o/oauth2/token"
       }
     }
+```
 
-To run:
+* Setup additional libraries
 
+```
+    bash setup.sh
+```
 
+* Run the server
 
-     (sudo) bash setup.sh
+```
      bash run.sh
-
+```
