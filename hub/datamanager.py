@@ -24,3 +24,10 @@ class DataManager(tornado.web.RequestHandler):
         return
     else:
       self.write("hello")
+
+  def get(self, path):
+    if path == 'list':
+        self.content_type = 'application/json'
+        data = self.store.db.execute('select lat, lon, data from items').fetchall();
+        self.write(json.dumps(data))
+        return

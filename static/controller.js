@@ -118,6 +118,18 @@ function getSizeEstimate(val) {
   }
 }
 
+function downloadFeeds() {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', '/data/list', true);
+  xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+  xhr.onload = function() {
+    var data = JSON.parse(this.responseText);
+    for(i=0; i < data.length; i++) {
+      addEventMarker(data[i][0], data[i][1], data[i][2])
+    }
+  }
+  xhr.send();
+}
 /**
  * Hook up event listeners.
  */
@@ -150,6 +162,8 @@ function init() {
       }.bind({}, inputs[i]), true);
     }
   }
+
+  downloadFeeds();
 }
 
 window.addEventListener('load', init);

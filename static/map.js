@@ -74,4 +74,17 @@ function lookupPlace(addr, callback) {
   });
 }
 
+function addEventMarker(lat, lon, data) {
+  console.log("lat: " + lat + " lon: " + lon + " data: " + data);
+  var latlong = new OpenLayers.LonLat(lon, lat);
+  latlong.transform(
+          new OpenLayers.Projection("EPSG:4326"),
+          map.getProjectionObject());
+
+  var size = new OpenLayers.Size(21,25);
+  var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+  var icon = new OpenLayers.Icon('static/img/marker.png', size, offset);
+  markers.addMarker(new OpenLayers.Marker(latlong, icon));
+}
+
 window.addEventListener('load', init, true);
