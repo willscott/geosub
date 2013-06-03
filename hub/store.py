@@ -1,5 +1,6 @@
 import sqlite3
 import json
+import hub
 
 class Store:
   """ Creates & maintains a location-filterable storage of items. """
@@ -19,6 +20,7 @@ class Store:
     sql = 'create table if not exists rules (user text not null, category integer not null, geofence text, primary key (user, category))'
     self.db.execute(sql)
     self.db.commit()
+    hub.ensureIds(self)
 
   def getItems(self, area, since):
     sql = 'select * from items where ts > (?) and '

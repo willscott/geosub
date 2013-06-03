@@ -64,7 +64,8 @@ class UserManager(tornado.web.RequestHandler):
         # TODO: cleanup default prefs.
         prefs = {
           "feeds": {
-            "feed_construction": True
+            "feed_construction": True,
+            "feed_fire": True,
           }, "places": {
           }
         }
@@ -103,6 +104,8 @@ class UserManager(tornado.web.RequestHandler):
       base['places'] = prefs[u'places']
 
     #TODO: syncronize prefs with db rules table.
+    self.store.db.execute('delete from rules where user=(?)', (id,))
+    self.store.db.commit()
 
     prefstr = json.dumps(base)
     self.store.db.execute('update users set prefs=(?) where id=(?)', (prefstr, id));
