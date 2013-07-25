@@ -11,6 +11,7 @@ class Store:
     self.ensureSchema()
 
   def ensureSchema(self):
+    print "Ensuring schema.";
     sql = 'create table if not exists items (id text PRIMARY KEY, category integer, lat real, lon real, ts real, data BLOB)'
     self.db.execute(sql)
     sql = 'create table if not exists categories (id INTEGER PRIMARY KEY AUTOINCREMENT, label text)'

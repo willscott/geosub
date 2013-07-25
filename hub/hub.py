@@ -15,6 +15,7 @@ for provider in providers.providers:
 def ensureIds(store):
   for url in registry:
     res = store.db.execute("select id from categories where label=(?)", (url,)).fetchall()
-    if res == None:
+    if res == None or len(res) == 0:
+      print "Adding category ", url
       store.db.execute("insert into categories (label) values ((?))", (url,))
       store.db.commit()

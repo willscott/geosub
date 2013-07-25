@@ -7,5 +7,7 @@ if geopy_folder not in sys.path:
 import landuse
 import fire
 
-providers = [(landuse.url, landuse.LandUse)]
-providers = [(fire.url, fire.Fire)]
+providers = [
+  (landuse.url, landuse.LandUse),
+  (fire.url, fire.Fire)
+]
