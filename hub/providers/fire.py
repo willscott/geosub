@@ -1,16 +1,16 @@
 import time
 import md5
 import string
-import requests
+import urllib2
 import json
 
-url = "http://web1.seattle.gov/dpd/luib/RSSAllAreas.aspx"
+url = "http://data.seattle.gov/resource/kzjm-xkqj.json"
 
 class Fire:
   def pull(self):
     qry = "?$select= address,longitude,latitude,incident_number,type,report_location,datetime &$where=longitude is not null and latitude is not null and datetime is not null&$order=datetime DESC"
-    r = requests.get(endpoint)
-    data = json.loads(r.text)
+    text = urllib2.urlopen(url + qry).readlines()
+    data = json.loads(text)
     return map(self.prepare, data)
 
   def prepare(self, item):
