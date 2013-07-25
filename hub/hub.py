@@ -5,6 +5,7 @@ def addProvider(url, cls):
   
 def getProvider(url):
   if not url in registry:
+    print "Could not find provider ", url
     return None
   return registry[url]()
 

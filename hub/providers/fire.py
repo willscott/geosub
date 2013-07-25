@@ -8,10 +8,15 @@ url = "http://data.seattle.gov/resource/kzjm-xkqj.json"
 
 class Fire:
   def pull(self):
-    qry = "?$select= address,longitude,latitude,incident_number,type,report_location,datetime &$where=longitude is not null and latitude is not null and datetime is not null&$order=datetime DESC"
-    text = urllib2.urlopen(url + qry).readlines()
-    data = json.loads(text)
-    return map(self.prepare, data)
+    qry = "?$select=%20address,longitude,latitude,incident_number,type,report_location,datetime%20&$where=longitude%20is%20not%20null%20and%20latitude%20is%20not%20null%20and%20datetime%20is%20not%20null&$order=datetime%20DESC"
+    try:
+      lines = urllib2.urlopen(url + qry).readlines()
+      text = string.join(lines)
+      data = json.loads(text)
+      return map(self.prepare, data)
+    except Exception as e:
+      print e
+      return []
 
   def prepare(self, item):
     def makeItem():
