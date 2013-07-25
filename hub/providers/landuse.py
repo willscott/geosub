@@ -32,7 +32,7 @@ class LandUse:
     out['lon'] = place[1][1]
     lines = urllib2.urlopen(item.link).readlines()
     page = string.join(map(string.strip, lines), '')
-    desc = re.sub('</td.*','',re.sub('.*trProjectDescription"><[^>]*>','',y))
+    desc = re.sub('</td.*','',re.sub('.*trProjectDescription"><[^>]*>','',page))
     out['data'] = {
       "addr": addr.lower().strip(),
       "title": item.title,
