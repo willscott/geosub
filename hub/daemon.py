@@ -1,3 +1,9 @@
+import os, sys, inspect
+this_folder = os.path.abspath(os.path.split(inspect.getfile( inspect.currentframe() ))[0])
+lib_folder = os.path.join(this_folder, "..", "lib")
+if lib_folder not in sys.path:
+  sys.path.insert(0, lib_folder)
+
 import store
 import hub
 import time

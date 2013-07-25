@@ -8,6 +8,10 @@ this_folder = os.path.abspath(os.path.split(inspect.getfile( inspect.currentfram
 tornado_folder = os.path.join(this_folder, "tornado")
 if tornado_folder not in sys.path:
   sys.path.insert(0, tornado_folder)
+lib_folder = os.path.join(this_folder, "lib")
+if lib_folder not in sys.path:
+  sys.path.insert(0, lib_folder)
+
 
 import base64
 import logging

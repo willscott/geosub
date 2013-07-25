@@ -1,2 +1,5 @@
-mkdir -p lib/python2.7/site-packages
-PYTHONPATH='lib/python2.7/site-packages/' easy_install --prefix=./ google-api-python-client requests shapely
+mkdir -p lib/
+touch lib/__init__.py
+pip install shapely
+pip install google-api-python-client
+
