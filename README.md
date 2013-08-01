@@ -3,11 +3,19 @@ Geo Sub
 
 Initial work on subscription service for streaming geographic data.
 
+Prerequisites
+------
+
+[Shapely](https://pypi.python.org/pypi/Shapely) will be automatically installed by running ```setup.sh```,
+but it does not automatically install its C dependency, [Geos](http://trac.osgeo.org/geos/).  Install that
+library as is appropriate for your platform.
+
 Installation
 ------
 
     git submodule init
     git submodule update
+	bash setup.sh
 
 Running
 ------
