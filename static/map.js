@@ -24,31 +24,27 @@ function init(){
   initPlaceChooser();
 }
 
-function initPlaceChooser() {
-  var container = document.getElementById('interests');
-  var places = container.getElementsByTagName('input');
-  for(var i = 0; i < places.length; i++) {
-    places[i].addEventListener('change', placeChange, true);
-  }
-}
-
-function placeChange(e) {
-  var place = e.target;
-  if (!place.value) {
+placeChange = function(element, value, callback) {
+  if (!value[0]) {
     return;
   }
-  lookupPlace(place.value, function(place, val) {
-    if (val) {
-      place.previousSibling.style.borderBottom = '0px';
+  lookupPlace(value[0], function(element, val, cb, res, lat, lon) {
+    if (res) {
+      element.previousSibling.style.borderBottom = '0px';
 
       var size = new OpenLayers.Size(21,25);
       var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
       var icon = new OpenLayers.Icon(place.previousSibling.src, size, offset);
-      markers.addMarker(new OpenLayers.Marker(val, icon));
+      markers.addMarker(new OpenLayers.Marker(res, icon));
+      val[1] = lat;
+      val[2] = lon;
     } else {
-      place.previousSibling.style.borderBottom = '2px solid red';
+      element.previousSibling.style.borderBottom = '2px solid red';
+      val[1] = 0;
+      val[2] = 0;
     }
-  }.bind(this, place));
+    cb();
+  }.bind(this, element, value, callback));
 }
 
 function lookupPlace(addr, callback) {
@@ -60,7 +56,7 @@ function lookupPlace(addr, callback) {
       var latlong = new OpenLayers.LonLat(resp[0]['lon'], resp[0]['lat']);
       cb(latlong.transform(
           new OpenLayers.Projection("EPSG:4326"),
-          map.getProjectionObject()));
+          map.getProjectionObject()), resp[0]['lat'], resp[0]['lon']);
     } catch(e) {
       cb(false);
     }

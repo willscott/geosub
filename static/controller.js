@@ -67,7 +67,7 @@ function refreshPrefs() {
   for (var place in state.prefs.places) {
     var el = document.getElementById('place_' + place);
     if (el) {
-      el.value = state.prefs.places[place];
+      el.value = state.prefs.places[place][0];
     }
   }
   if (state.prefs['email_id']) {
@@ -151,8 +151,8 @@ function init() {
         if (state.prefs.places == undefined) {
           state.prefs.places = {};
         }
-        state.prefs.places[el.id.substr(6)] = el.value;
-        savePrefs();
+        state.prefs.places[el.id.substr(6)] = [el.value, 0, 0];
+        placeChange(el, state.prefs.places[el.id.substr(6)], savePrefs);
       }.bind({}, inputs[i]), true);
     }
     else if (inputs[i].id == 'email_id') {
@@ -165,5 +165,9 @@ function init() {
 
   downloadFeeds();
 }
+
+var placeChange = function(element, value, callback) {
+  callback()
+};
 
 window.addEventListener('load', init);
