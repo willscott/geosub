@@ -20,6 +20,8 @@ class Store:
     self.db.execute(sql)
     sql = 'create table if not exists rules (user text not null, category integer not null, geofence text, primary key (user, category))'
     self.db.execute(sql)
+    sql = 'create table if not exists delivered (user text not null, id text not null, primary key (user, id))'
+    self.db.execute(sql)
     self.db.commit()
     hub.ensureIds(self)
 

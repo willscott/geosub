@@ -25,7 +25,9 @@ class Daemon:
           if not self.store.has(itm['id']):
             print "daemon added new item"
             parsed = itm['get']()
+            # store the item so that future users can retrieve it.
             self.store.addItem(itm['id'], fid, (parsed['lat'], parsed['lon']), parsed['time'], parsed['data'])
+            # process the item against existing rules.
             self.deliver.process(itm['id'], fid, parsed)
       time.sleep(60)
 
