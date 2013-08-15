@@ -1,4 +1,4 @@
-from lib.shapely.geometry import Point, MultiPoint
+from shapely.geometry import Point, MultiPoint
 
 class PointRadiusGeoArea:
   def __init__(self, lat, long, r):

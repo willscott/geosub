@@ -5,6 +5,7 @@ if lib_folder not in sys.path:
   sys.path.insert(0, lib_folder)
 
 import store
+import deliver
 import hub
 import time
 
@@ -13,6 +14,7 @@ class Daemon:
 
   def __init__(self, db):
     self.store = store.Store(db)
+    self.deliver = deliver.Deliver(self.store)
 
   def start(self):
     while True:
@@ -24,6 +26,7 @@ class Daemon:
             print "daemon added new item"
             parsed = itm['get']()
             self.store.addItem(itm['id'], fid, (parsed['lat'], parsed['lon']), parsed['time'], parsed['data'])
+            self.deliver.process(itm['id'], fid, parsed)
       time.sleep(60)
 
   def getItems(self, url):
