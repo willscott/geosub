@@ -20,8 +20,6 @@ function init(){
 
   markers = new OpenLayers.Layer.Markers( "Markers" );
   map.addLayer(markers);
-
-  initPlaceChooser();
 }
 
 placeChange = function(element, value, callback) {
@@ -34,7 +32,7 @@ placeChange = function(element, value, callback) {
 
       var size = new OpenLayers.Size(21,25);
       var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-      var icon = new OpenLayers.Icon(place.previousSibling.src, size, offset);
+      var icon = new OpenLayers.Icon(element.previousSibling.src, size, offset);
       markers.addMarker(new OpenLayers.Marker(res, icon));
       val[1] = lat;
       val[2] = lon;
@@ -71,7 +69,6 @@ function lookupPlace(addr, callback) {
 }
 
 function addEventMarker(lat, lon, data) {
-  console.log("lat: " + lat + " lon: " + lon + " data: " + data);
   var latlong = new OpenLayers.LonLat(lon, lat);
   latlong.transform(
           new OpenLayers.Projection("EPSG:4326"),

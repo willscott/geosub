@@ -166,8 +166,4 @@ function init() {
   downloadFeeds();
 }
 
-var placeChange = function(element, value, callback) {
-  callback()
-};
-
 window.addEventListener('load', init);
